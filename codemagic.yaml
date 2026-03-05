@@ -1,7 +1,6 @@
 workflows:
-  react-native-android:
-    name: React Native Android Build
-    max_build_duration: 60
+  expo-android-build:
+    name: Expo Android Build
 
     environment:
       node: 18
@@ -14,10 +13,15 @@ workflows:
       - name: Install Expo CLI
         script: |
           npm install -g expo-cli
+          npm install -g eas-cli
 
-      - name: Build Android APK
+      - name: Login Expo
         script: |
-          npx expo export
-          
+          eas whoami || eas login --non-interactive
+
+      - name: Build APK
+        script: |
+          eas build --platform android --profile preview --non-interactive
+
     artifacts:
-      - android/app/build/outputs/**/*.apk
+      - build/**/*.apk
